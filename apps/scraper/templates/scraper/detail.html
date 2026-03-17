@@ -1,0 +1,115 @@
+<a href="{% url 'properties:properties_list' %}">Propiedades</a>
+
+<div class="card">
+
+    <div class="card-header">
+        <h3>{{ scraper.source }}</h3>
+    </div>
+
+    <div class="card-body">
+
+        <p>Última Página: {{ scraper.last_page }}</p>
+        <p>Última actualización: {{ scraper.updated_at }}</p>
+        <a href="{% url 'scraper:scraper_run' scraper.pk %}" class="btn btn-success">Ejecutar</a>
+        ----
+        <a href="{% url 'scraper:scraper_reset' scraper.pk %}" class="btn btn-danger">Reset</a>
+
+    </div>
+     <div class="row">
+        <h3>Propiedades</h3>
+    <div class="col-md-4">
+
+        <div class="small-box bg-info">
+
+            <div class="inner">
+                <h3>{{ total }}</h3>
+                <p>Total propiedades</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="small-box bg-success">
+
+            <div class="inner">
+                <h3>{{ total_scraped }}</h3>
+                <p>Scrapeadas</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="small-box bg-warning">
+
+            <div class="inner">
+                <h3>{{ total_pending }}</h3>
+                <p>Pendientes</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="card">
+
+    <div class="card-header">
+
+        <h3 class="card-title">
+
+            Scraper detalle
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <form
+            method="post"
+            action="{% url 'scraper:scraper_run_detail' scraper.pk %}"
+        >
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label>
+
+                    Limite (vacío = todo)
+
+                </label>
+
+                <input
+                    type="number"
+                    name="limit"
+                    class="form-control"
+                    value="1"
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-success"
+            >
+
+                Ejecutar scraper detalle
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</div>

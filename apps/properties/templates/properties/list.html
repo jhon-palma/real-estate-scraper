@@ -1,0 +1,7 @@
+<a href="{% url 'scraper:scraper_list' %}">Opciones</a>
+<li>
+    {% for property in properties %}
+        <ul><a href="{% url 'properties:property_detail' property.pk %}">{{ property.title }}</a></ul>
+    {% endfor %}
+
+</li>

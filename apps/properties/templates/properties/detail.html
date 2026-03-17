@@ -1,0 +1,162 @@
+<a href="{% url 'properties:properties_list' %}">Propiedades</a>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    {{ property.title }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <h4 class="text-success">
+                    {{ property.price }}
+                </h4>
+                <p>{{ property.location }}</p>
+                <p>
+                    <b>Operación:</b>
+                    {{ property.get_operation_display }}
+                </p>
+                <p>
+                    <b>Fuente:</b>
+                    {{ property.source }}
+                </p>
+                <p>
+                    <b>Código:</b>
+                    {{ property.external_code }}
+                </p>
+                {% if property.url %}
+                    <a
+                      href="{{ property.url }}"
+                      target="_blank"
+                      class="btn btn-primary btn-sm"
+                    >
+                        Ver original
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    Imágenes
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for img in property.images.all %}
+                        <div class="col-md-4 mb-3">
+                            <img src="{{ img.url }}" class="img-fluid img-thumbnail" style="height:150px; object-fit:cover;">
+                        </div>
+                    {% empty %}
+                        <p>No hay imágenes</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Descripción</h3>
+            </div>
+            <div class="card-body">
+                <p>{{ property.description|linebreaks }}</p>
+            </div>
+        </div>
+        {% for title, values in property.extras.items %}
+            <div class="mb-3">
+                <strong>{{ title }}</strong>
+                <div>
+                    {% for v in values %}
+                        {{ v }}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Características</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Área total:
+                        {{ property.total_area }}
+                    </li>
+                    <li class="list-group-item">
+                        Área cubierta:
+                        {{ property.covered_area }}
+                    </li>
+                    <li class="list-group-item">
+                        Terreno:
+                        {{ property.land_area }}
+                    </li>
+                    <li class="list-group-item">
+                        Ambientes:
+                        {{ property.rooms }}
+                    </li>
+                    <li class="list-group-item">
+                        Dormitorios:
+                        {{ property.bedrooms }}
+                    </li>
+                    <li class="list-group-item">
+                        Baños:
+                        {{ property.bathrooms }}
+                    </li>
+                    <li class="list-group-item">
+                        Parqueaderos:
+                        {{ property.parking }}
+                    </li>
+                    <li class="list-group-item">
+                        Antigüedad:
+                        {{ property.antiquity }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    Oficina
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>
+                    <b>Agente:</b>
+                    {{ property.agent }}
+                </p>
+                <p>
+                    <b>Oficina:</b>
+                    {{ property.office_name }}
+                </p>
+                <p>
+                    {{ property.office_address }}
+                </p>
+                {% if property.office_image %}
+                    <img
+                      src="{{ property.office_image }}"
+                      class="img-fluid" style="height:150px; object-fit:cover;"
+                    >
+                {% endif %}
+            </div>
+        </div>
+        {% if property.latitude and property.longitude %}
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Ubicación</h3>
+                </div>
+                <div class="card-body">
+                    <iframe
+                        width="100%"
+                        height="250"
+                        frameborder="0"
+                        style="border:0"
+                        src="https://www.google.com/maps?q={{ property.latitude }},{{ property.longitude }}&output=embed"
+                    >
+                    </iframe>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
