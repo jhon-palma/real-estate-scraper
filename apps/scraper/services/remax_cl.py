@@ -60,18 +60,11 @@ and content/ListingClass eq 1
 
         data = r.json()
 
-        # print("???????????????????????")
-        # print(data["@odata.count"])
-        # print("???????????????????????")
-        
         with open("response_cl.json", "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
         
         r.raise_for_status()
 
-        # print("========================")
-        # print(r.json())
-        # print("========================")
         if r.status_code != 200:
             print(r.status_code, r.text)
             return []
@@ -139,7 +132,6 @@ and content/ListingClass eq 1
 
         if mls_el:
             mls = mls_el.text.replace("ID:", "").strip()
-
         # -----------------
         # TITLE
         # -----------------
@@ -159,7 +151,6 @@ and content/ListingClass eq 1
         # -----------------
         # PRICE
         # -----------------
-
         price, currency = self.parse_price(soup)
 
         price_value = self.clean_price(price)
@@ -173,20 +164,6 @@ and content/ListingClass eq 1
             currency,
             rates
         )
-
-        print("#########################")
-        print(price_usd)
-        print(price_value, currency, price_usd)
-        print("#########################")
-       
-        # price_el = soup.select_one(
-        #     '[data-testid="listing-price"]'
-        # )
-
-        # price = None
-
-        # if price_el:
-        #     price = price_el.get_text(" ", strip=True)
 
         price_type = None
 
@@ -202,7 +179,6 @@ and content/ListingClass eq 1
         # -----------------
         # ADDRESS
         # -----------------
-
         addr_el = soup.select_one(
             '[data-testid="listing-address"] p'
         )
@@ -227,8 +203,7 @@ and content/ListingClass eq 1
                 "\n",
                 strip=True,
             )
-        # print(len(description))
-        # print("Descripcion: ", description)
+
         additional_costs_el = soup.select_one('[data-testid="additional-costs-maintenance-fee-value"]')
         additional_costs = (
             additional_costs_el.text.strip()
@@ -242,7 +217,6 @@ and content/ListingClass eq 1
         # -----------------
         # IMAGES
         # -----------------
-
         images = []
 
         for img in soup.select("img"):
@@ -254,7 +228,6 @@ and content/ListingClass eq 1
 
             if "gryphtech" in src:
                 images.append(src)
-
         # -----------------
         # AGENT (probable)
         # -----------------
@@ -331,7 +304,6 @@ and content/ListingClass eq 1
 
         return result
 
-
     def parse_listing_features(self, soup):
 
         result = {}
@@ -343,7 +315,6 @@ and content/ListingClass eq 1
         if not section:
             return result
 
-        # titulo
         title_el = section.select_one(
             '[data-testid="listing-features-heading"]'
         )
@@ -399,18 +370,14 @@ and content/ListingClass eq 1
 
         text = text.strip().lower()
 
-        # quitar :
         text = text.rstrip(":")
 
-        # quitar espacios extra
         text = " ".join(text.split())
 
-        # quitar tildes
         text = unicodedata.normalize("NFKD", text)
         text = "".join(c for c in text if not unicodedata.combining(c))
 
         return text
-
 
     def parse_attributes(self, soup):
 
@@ -445,11 +412,6 @@ and content/ListingClass eq 1
         if not attrs:
             return
 
-        # área construida
-        # if "m² construidos" in attrs:
-        #     obj.built_area = self.to_float(attrs["m² construidos"])
-        print(attrs)
-
         if "sup. habitable(m2)" in attrs:
             obj.total_area = self.to_float(attrs["sup. habitable(m2)"])
     
@@ -461,7 +423,7 @@ and content/ListingClass eq 1
 
         if "terreno" in attrs:
             obj.land = attrs["terreno"]
-        # 'sup. habitable(m2)': '3.538', 'm² construidos': '300', 'total de ambientes:': '20', 'terreno:': '170x176', 'm² construidos': '1.314', 'estacionamientos': '50', 'sup. habitable(m2)': '30.000', 'm² totales': '30.000', 'año/mes de construcción': '2001/01'
+
         if "estacionamientos" in attrs:
             obj.parking = attrs["estacionamientos"]
         
@@ -471,9 +433,6 @@ and content/ListingClass eq 1
         if "total de ambientes" in attrs:
             obj.rooms = attrs["total de ambientes"]
 
-        # if "año/mes de construcción" in attrs:
-        #     obj.year = attrs["año/mes de construcción"].split("/")[0]
-    
     def to_float(self, value):
         if not value:
             return None
@@ -508,7 +467,6 @@ and content/ListingClass eq 1
         price = None
         currency = None
 
-        # 1️⃣ precio original
         first_price_el = soup.select_one(
             '[data-testid="card-first-price"]'
         )
@@ -516,8 +474,6 @@ and content/ListingClass eq 1
         if first_price_el:
 
             text = first_price_el.get_text(" ", strip=True)
-
-            # ejemplo: 24.990 UF
 
             parts = text.split()
 
@@ -527,7 +483,6 @@ and content/ListingClass eq 1
 
             return price, currency
 
-        # 2️⃣ fallback
         price_el = soup.select_one(
             '[data-testid="listing-price"]'
         )
@@ -536,8 +491,6 @@ and content/ListingClass eq 1
 
             text = price_el.get_text(" ", strip=True)
 
-            # ejemplo: 995.644.582,80 $
-
             parts = text.split()
 
             if len(parts) >= 2:
@@ -545,7 +498,6 @@ and content/ListingClass eq 1
                 currency = parts[1]
 
         return price, currency
-    
 
     def normalize_currency(self, currency):
 
@@ -575,7 +527,6 @@ and content/ListingClass eq 1
         except:
             return None
     
-    
     def get_rates(self):
 
         url = "https://www.remax.cl/sitesettings/settings.json"
@@ -595,7 +546,7 @@ and content/ListingClass eq 1
             rates[code] = rate
 
         return rates
-    
+
     def convert_to_usd(self, price, currency, rates):
 
         if not price:

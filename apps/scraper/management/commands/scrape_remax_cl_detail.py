@@ -93,27 +93,3 @@ class Command(BaseCommand):
                     property=prop,
                     url=img
                 )
-                
-            # prop.covered_area = data["covered_area"]
-
-            # prop.total_area = data["total_area"]
-            # prop.semi_covered_area = data["semi_covered_area"]
-            # prop.land_area = data["land_area"]
-
-
-            # prop.rooms = data["rooms"]
-            # prop.bedrooms = data["bedrooms"]
-            # prop.bathrooms = data["bathrooms"]
-            # prop.half_bathrooms = data["half_bathrooms"]
-            # prop.parking = data["parking"]
-            # prop.antiquity = data["antiquity"]
-            # prop.property_floors = data["property_floors"]
-            # prop.expenses  = data["expenses"]
-            # prop.latitude = data["lat"]
-            # prop.longitude = data["lng"]
-            # prop.suitable_credit = data["suitable_credit"]
-            # prop.offer_financing = data["offer_financing"]
-            # prop.suitable_professional = data["suitable_professional"]
-            # prop.extras = data["extras"]
-            # prop.office_address = data["office_address"]
-            # prop.office_image = data["office_image"]
