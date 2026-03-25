@@ -9,7 +9,7 @@
             </div>
             <div class="card-body">
                 <h4 class="text-success">
-                    {{ property.price }}
+                    {% if property.price_type %}{{ property.price_type}}{% endif %} {{ property.price }} {% if property.currency %}{{ property.currency }}{% endif %}  
                 </h4>
                 <p>{{ property.location }}</p>
                 <p>
@@ -53,6 +53,7 @@
                 </div>
             </div>
         </div>
+        <h2>{{ property.subtitle }}</h2>
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Descripción</h3>
@@ -66,7 +67,7 @@
                 <strong>{{ title }}</strong>
                 <div>
                     {% for v in values %}
-                        {{ v }}
+                        {{ v|linebreaks }}
                     {% endfor %}
                 </div>
             </div>
@@ -80,16 +81,24 @@
             <div class="card-body">
                 <ul class="list-group">
                     <li class="list-group-item">
-                        Área total:
+                        {% if property.source == 'remax_cl' %}
+                            m² totales:
+                        {% else %}
+                            Área total:
+                        {% endif %}
                         {{ property.total_area }}
                     </li>
                     <li class="list-group-item">
-                        Área cubierta:
+                        {% if property.source == 'remax_cl' %}
+                            m² construidos:
+                        {% else %}
+                            Área cubierta:
+                        {% endif %}
                         {{ property.covered_area }}
                     </li>
                     <li class="list-group-item">
                         Terreno:
-                        {{ property.land_area }}
+                        {{ property.land_area|default:property.land }}
                     </li>
                     <li class="list-group-item">
                         Ambientes:
@@ -108,12 +117,32 @@
                         {{ property.parking }}
                     </li>
                     <li class="list-group-item">
-                        Antigüedad:
-                        {{ property.antiquity }}
+                        {% if property.antiquity %}
+                            Antigüedad:
+                            {{ property.antiquity }}
+                        {% else %}
+                            Año/Mes de Construcción
+                            {{ property.year }}
+                        {% endif %}
                     </li>
                 </ul>
             </div>
         </div>
+        {% if property.room_details %}
+            <h3>Ambientes</h3>
+            {% for r in property.room_details %}
+                <div>
+
+                    {% if r.image %}
+                        <img src="{{ r.image }}" width="100">
+                    {% endif %}
+
+                    {{ r.type }}: {{ r.count }}
+
+                </div>
+            {% endfor %}
+        {% endif %}
+        <span>Gastos comunes {{ property.additional_costs }}</span>
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
@@ -156,6 +185,14 @@
                     </iframe>
                 </div>
             </div>
+        {% endif %}
+        {% if property.video_url %}
+            <iframe
+                src="{{ property.video_url }}"
+                width="100%"
+                height="400"
+                allowfullscreen>
+            </iframe>
         {% endif %}
     </div>
 </div>

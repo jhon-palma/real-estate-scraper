@@ -1,3 +1,5 @@
+import pdb
+
 from playwright.sync_api import sync_playwright
 
 
@@ -9,6 +11,7 @@ class Browser:
         wait_selector=None,
         scroll=False,
         retries=3,
+        click_selector=None,
     ):
 
         for i in range(retries):
@@ -45,6 +48,14 @@ class Browser:
 
                         browser.close()
                         return None
+
+                    if click_selector:
+                        
+                        try:
+                            page.click(click_selector)
+                            page.wait_for_timeout(1000)
+                        except:
+                            pass
 
                     if scroll:
 
