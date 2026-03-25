@@ -60,9 +60,6 @@ and content/ListingClass eq 1
 
         data = r.json()
 
-        with open("response_cl.json", "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
-        
         r.raise_for_status()
 
         if r.status_code != 200:

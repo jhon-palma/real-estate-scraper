@@ -1,3 +1,5 @@
+import pdb
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.management import call_command
 from django.contrib import messages
@@ -31,11 +33,12 @@ def scraper_detail(request, pk):
         }
     )
 
+
 def scraper_run(request, pk):
     scraper = get_object_or_404(ScraperState,pk=pk)
 
-    if scraper.source == "remax_ec":
-        call_command("remax_ec")
+    command = f"scrape_{scraper.source}"
+    call_command(command)
 
     messages.success(request, "Scraper ejecutado")
 
@@ -45,8 +48,8 @@ def scraper_run(request, pk):
 def scraper_reset(request, pk):
     scraper = get_object_or_404(ScraperState, pk=pk)
 
-    if scraper.source == "remax_ec":
-        call_command("remax_ec", reset=True)
+    command = f"scrape_{scraper.source}"
+    call_command(command, reset=True)
 
     messages.warning(request, "Scraper reiniciado")
 
@@ -61,18 +64,17 @@ def scraper_run_detail(request, pk):
     )
 
     limit = request.POST.get("limit")
+    command = f"scrape_{scraper.source}_detail"
 
-    if scraper.source == "remax_ec":
-
-        if limit:
-            call_command(
-                "scrape_remax_ec_detail",
-                limit=int(limit)
-            )
-        else:
-            call_command(
-                "scrape_remax_ec_detail"
-            )
+    if limit:
+        call_command(
+            command,
+            limit=int(limit)
+        )
+    else:
+        call_command(
+            command
+        )
 
     messages.success(
         request,
@@ -83,31 +85,3 @@ def scraper_run_detail(request, pk):
         "scraper:scraper_detail",
         pk=pk
     )
-
-# def scraper_detail_run(request):
-
-#     if request.method == "POST":
-
-#         limit = request.POST.get("limit")
-
-#         if limit:
-#             call_command(
-#                 "remax_ec_detail",
-#                 limit=int(limit)
-#             )
-#         else:
-#             call_command(
-#                 "remax_ec_detail"
-#             )
-
-#         messages.success(
-#             request,
-#             "Scraping ejecutado"
-#         )
-
-#         return redirect("scraper_detail_run")
-
-#     return render(
-#         request,
-#         "scraper/run_detail.html"
-#     )

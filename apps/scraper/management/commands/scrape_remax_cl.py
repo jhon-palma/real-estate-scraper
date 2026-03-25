@@ -20,10 +20,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         scraper = RemaxScraper()
-        # items = scraper.get_list()
-        # for item in items:
-        #     url = item["url"]
-        #     print("NEW", url)
 
         state, _ = ScraperState.objects.get_or_create(
             source="remax_cl",
@@ -47,19 +43,12 @@ class Command(BaseCommand):
             try:
 
                 items = scraper.get_list(page)
-                print("========================")
-                print(items)
-                print("========================")
-                print("========================")
 
             except Exception as e:
-
                 print("ERROR PAGE", page, e)
-
                 page += 1
                 state.last_page = page
                 state.save()
-
                 continue
 
             if not items:

@@ -20,7 +20,9 @@ class Command(BaseCommand):
         scraper = RemaxScraper()
 
         state, _ = ScraperState.objects.get_or_create(
-            source="remax_ec"
+            source="remax_ec",
+            name='Remax Ecuador',
+            url='https://www.remax.com.ec',
         )
 
         if options["reset"]:
